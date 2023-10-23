@@ -1,0 +1,231 @@
+# QueryBoostX: PostgreSQL Query Optimization Solution: Iteration#1
+
+> **Name: Divyansh Jha**
+> 
+
+> **Batch: 2-CCVT**
+> 
+
+> **SAP ID: 500091657**
+> 
+
+> **Subject: Cloud Performance Tuning**
+> 
+
+# Agenda for Iteration#1:
+
+1. Make a Postgres database(include the table with sample)
+2. Host the database on AWS RDS
+3. Design a cloud monitoring dashboard on AWS CloudWatch
+
+---
+
+# Tech Stack Used:
+
+1. AWS RDS
+2. AWS CloudWatch
+3. PostgreSQL admin database(hosted on RDS)
+
+---
+
+# Execution:
+
+## VPC: Security Group Creation:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled.png)
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%201.png)
+
+---
+
+## RDS: Database Creation:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%202.png)
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%203.png)
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%204.png)
+
+### Configuration:
+
+DB Identifier: queryboostx
+
+Master User: Divyansh
+
+Password: ninjhadb
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%205.png)
+
+## PostgreSQL: pgAdmin connected to AWS RDS:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%206.png)
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%207.png)
+
+---
+
+### Table Creation:
+
+```sql
+CREATE TABLE student_records (
+    sap_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    date_of_birth DATE,
+    email VARCHAR(100),
+    phone_number VARCHAR(15),
+    address VARCHAR(255),
+    enrollment_date DATE,
+    graduation_date DATE,
+    major_degree VARCHAR(50),
+    minor_degree VARCHAR(50),
+    CGPA DECIMAL(4, 2)
+);
+```
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%208.png)
+
+### Table created:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%209.png)
+
+### Insert data into the table:
+
+```sql
+INSERT INTO student_records (sap_id, first_name, last_name, date_of_birth, email, phone_number, address, enrollment_date, graduation_date, major_degree, minor_degree, CGPA)
+VALUES
+    (1001, 'John', 'Doe', '1999-05-15', 'john.doe@gmail.com', '123-456-7890', '123 Main St, City', '2018-09-01', '2022-06-15', 'Computer Science', 'Mathematics', 3.85),
+    (1002, 'Jane', 'Smith', '2000-03-10', 'jane.smith@yahoo.com', '987-654-3210', '456 Elm St, Town', '2017-08-15', '2021-05-20', 'Biology', 'Chemistry', 3.72),
+    (1003, 'David', 'Johnson', '1998-11-25', 'david.johnson@gmail.com', '555-555-5555', '789 Oak St, Village', '2019-09-03', '2023-05-30', 'Mechanical Engineering', 'Physics', 3.95),
+    (1004, 'Emily', 'Wilson', '2001-02-18', 'emily.wilson@gmail.com', '777-123-4567', '987 Pine St, Suburb', '2020-08-10', '2024-06-12', 'Psychology', 'Sociology', 3.68),
+    (1005, 'Michael', 'Brown', '1997-09-30', 'michael.brown@hotmail.com', '222-987-6543', '456 Cedar St, Town', '2018-08-28', '2022-05-25', 'Electrical Engineering', 'Mathematics', 3.78),
+    (1006, 'Sophia', 'Lee', '2000-06-20', 'sophia.lee@gmail.com', '111-333-9999', '654 Birch St, Suburb', '2017-08-22', '2021-05-18', 'Nursing', 'Biology', 3.90),
+    (1007, 'Daniel', 'Garcia', '1999-04-07', 'daniel.garcia@gmail.com', '888-444-2222', '231 Elm St, City', '2018-09-01', '2022-06-15', 'Business Administration', 'Economics', 3.75),
+    (1008, 'Olivia', 'Martinez', '2001-08-12', 'olivia.martinez@outlook.com', '333-777-1111', '789 Willow St, Village', '2017-08-15', '2021-05-20', 'English Literature', 'History', 3.82),
+    (1009, 'William', 'Harris', '1998-10-03', 'william.harris@yahoo.com', '444-222-3333', '123 Oak St, City', '2019-08-27', '2023-05-24', 'Chemical Engineering', 'Environmental Science', 3.88),
+    (1010, 'Ava', 'Taylor', '2002-01-05', 'ava.taylor@hotmail.com', '999-888-7777', '456 Maple St, Suburb', '2020-08-15', '2024-06-10', 'Political Science', 'International Relations', 3.70),
+    (1011, 'James', 'Anderson', '1997-12-19', 'james.anderson@yahoo.com', '666-333-9999', '654 Oak St, Village', '2018-08-28', '2022-05-22', 'Civil Engineering', 'Mathematics', 3.79),
+    (1012, 'Mia', 'White', '2000-07-22', 'mia.white@hotmail.com', '111-555-8888', '789 Cedar St, Town', '2017-08-22', '2021-05-15', 'Psychology', 'Sociology', 3.91),
+    (1013, 'Benjamin', 'Lopez', '1999-05-09', 'benjamin.lopez@gmail.com', '777-444-5555', '231 Willow St, City', '2018-09-01', '2022-06-12', 'Computer Engineering', 'Physics', 3.74),
+    (1014, 'Charlotte', 'Gonzalez', '2001-08-30', 'charlotte.gonzalez@outlook.com', '222-999-1111', '123 Pine St, Village', '2017-08-15', '2021-05-18', 'Biology', 'Chemistry', 3.86),
+    (1015, 'Daniel', 'Evans', '1998-11-15', 'daniel.evans@yahoo.com', '444-777-3333', '456 Birch St, Town', '2019-08-27', '2023-05-30', 'Economics', 'Mathematics', 3.77),
+    (1016, 'Harper', 'Rodriguez', '2002-02-12', 'harper.rodriguez@outlook.com', '999-333-8888', '654 Cedar St, Suburb', '2020-08-15', '2024-06-15', 'Environmental Science', 'Geology', 3.72),
+    (1017, 'Joseph', 'Perez', '1997-10-21', 'joseph.perez@gmail.com', '666-555-2222', '789 Elm St, City', '2018-08-28', '2022-05-24', 'Mathematics', 'Statistics', 3.94),
+    (1018, 'Sophia', 'Johnson', '2000-07-08', 'sophia.johnson@outlook.com', '111-222-7777', '123 Birch St, Village', '2017-08-22', '2021-05-20', 'Music', 'Theater Arts', 3.67),
+    (1019, 'Christopher', 'Davis', '1999-05-03', 'christopher.davis@outlook.com', '777-333-4444', '456 Willow St, Suburb', '2019-08-03', '2023-05-20', 'Chemistry', 'Physics', 3.81),
+    (1020, 'Emma', 'Hernandez', '2001-01-18', 'emma.hernandez@hotmail.com', '333-111-9999', '231 Cedar St, Town', '2020-08-10', '2024-06-18', 'Sociology', 'Psychology', 3.73),
+    (1021, 'Alexander', 'Walker', '1997-09-03', 'alexander.walker@gmail.com', '555-444-2222', '789 Oak St, Village', '2018-08-28', '2022-05-22', 'Physics', 'Astronomy', 3.89),
+    (1022, 'Avery', 'Torres', '2000-06-25', 'avery.torres@rediffmail.com', '222-777-1111', '987 Main St, City', '2017-08-22', '2021-05-15', 'Political Science', 'International Relations', 3.76),
+    (1023, 'Daniel', 'Lopez', '1999-03-07', 'daniel.lopez@outlook.com', '123-999-3333', '456 Elm St, Town', '2019-09-03', '2023-05-30', 'Geology', 'Environmental Science', 3.69),
+    (1024, 'Isabella', 'Jackson', '2001-05-02', 'isabella.jackson@rediffmail.com', '987-111-2222', '123 Oak St, Suburb', '2020-08-15', '2024-06-15', 'Marketing', 'Business Administration', 3.83),
+    (1025, 'Jack', 'Martin', '1998-08-09', 'jack.martin@yahoo.com', '555-222-7777', '654 Pine St, Village', '2017-08-22', '2021-05-20', 'History', 'English Literature', 3.80),
+    (1026, 'Ella', 'Sanchez', '1999-02-14', 'ella.sanchez@rediffmail.com', '444-888-7777', '789 Cedar St, Suburb', '2018-08-28', '2022-05-24', 'Communication Studies', 'Psychology', 3.72),
+    (1027, 'William', 'Hall', '2002-03-28', 'william.hall@hotmail.com', '999-111-3333', '456 Birch St, City', '2017-08-15', '2021-05-20', 'Computer Science', 'Mathematics', 3.86),
+    (1028, 'Victoria', 'Gonzalez', '1998-12-09', 'victoria.gonzalez@yahoo.com', '666-222-7777', '123 Oak St, Town', '2019-08-03', '2023-05-22', 'Music', 'Theater Arts', 3.68),
+    (1029, 'Joseph', 'Rivera', '2001-09-27', 'joseph.rivera@outlook.com', '123-456-7890', '987 Pine St, Village', '2020-08-15', '2024-06-12', 'Biology', 'Chemistry', 3.95),
+    (1030, 'Sofia', 'Scott', '1997-05-31', 'sofia.scott@rediffmail.com', '222-111-9999', '231 Elm St, Suburb', '2017-08-22', '2021-05-18', 'Political Science', 'International Relations', 3.79),
+    (1031, 'David', 'Ramirez', '2000-11-13', 'david.ramirez@gmail.com', '987-333-5555', '654 Oak St, City', '2018-09-01', '2022-06-15', 'Electrical Engineering', 'Physics', 3.88),
+    (1032, 'Olivia', 'Young', '1999-06-07', 'olivia.young@hotmail.com', '555-777-1111', '456 Cedar St, Village', '2019-08-27', '2023-05-30', 'Mechanical Engineering', 'Mathematics', 3.82),
+    (1033, 'Liam', 'Torres', '2002-02-02', 'liam.torres@yahoo.com', '666-555-2222', '123 Main St, Suburb', '2020-08-10', '2024-06-10', 'Psychology', 'Sociology', 3.70),
+    (1034, 'Mia', 'Smith', '1998-10-23', 'mia.smith@yahoo.com', '222-444-7777', '789 Pine St, City', '2018-08-15', '2022-05-20', 'Computer Engineering', 'Physics', 3.94),
+    (1035, 'Ethan', 'Martin', '2000-01-16', 'ethan.martin@outlook.com', '123-444-9999', '231 Elm St, Village', '2017-08-22', '2021-05-15', 'Economics', 'Mathematics', 3.72),
+    (1036, 'Ava', 'Hernandez', '1999-08-04', 'ava.hernandez@hotmail.com', '555-777-8888', '456 Cedar St, Suburb', '2019-09-03', '2023-05-30', 'Nursing', 'Biology', 3.90),
+    (1037, 'James', 'Wright', '2001-06-05', 'james.wright@hotmail.com', '987-222-1111', '123 Birch St, City', '2020-08-15', '2024-06-18', 'Mathematics', 'Statistics', 3.75),
+    (1038, 'Harper', 'Lopez', '1997-04-17', 'harper.lopez@outlook.com', '666-333-7777', '654 Pine St, Suburb', '2017-08-15', '2021-05-18', 'Political Science', 'History', 3.81),
+    (1039, 'Benjamin', 'Clark', '2000-07-30', 'benjamin.clark@hotmail.com', '222-555-9999', '789 Elm St, Village', '2018-09-01', '2022-06-12', 'Biology', 'Chemistry', 3.83),
+    (1040, 'Luna', 'Garcia', '1999-03-11', 'luna.garcia@gmail.com', '123-666-2222', '456 Oak St, Suburb', '2019-08-27', '2023-05-30', 'Art History', 'French', 3.76),
+    (1041, 'Lucas', 'Adams', '2001-10-20', 'lucas.adams@yahoo.com', '666-777-5555', '231 Cedar St, City', '2020-08-10', '2024-06-10', 'Chemical Engineering', 'Physics', 3.91),
+    (1042, 'Aria', 'Turner', '1998-12-13', 'aria.turner@rediffmail.com', '222-777-8888', '789 Main St, Suburb', '2018-08-15', '2022-05-20', 'Psychology', 'Sociology', 3.71),
+    (1043, 'Henry', 'White', '2000-05-25', 'henry.white@yahoo.com', '123-444-9999', '654 Oak St, City', '2017-08-22', '2021-05-15', 'Computer Science', 'Mathematics', 3.85),
+    (1044, 'Scarlett', 'Harris', '1999-02-18', 'scarlett.harris@outlook.com', '555-777-1111', '231 Pine St, Village', '2019-09-03', '2023-05-30', 'History', 'English Literature', 3.89),
+    (1045, 'Samuel', 'Gonzalez', '2001-09-03', 'samuel.gonzalez@hotmail.com', '987-222-1111', '456 Elm St, Suburb', '2020-08-15', '2024-06-18', 'Economics', 'Political Science', 3.74),
+    (1046, 'Hazel', 'Robinson', '1998-11-10', 'hazel.robinson@rediffmail.com', '222-555-9999', '789 Cedar St, City', '2018-09-01', '2022-06-12', 'Physics', 'Astronomy', 3.87),
+    (1047, 'Luke', 'Young', '2000-04-22', 'luke.young@outlook.com', '666-333-7777', '123 Pine St, Village', '2017-08-15', '2021-05-18', 'Biology', 'Chemistry', 3.78),
+    (1048, 'Zoe', 'Davis', '1999-07-29', 'zoe.davis@outlook.com', '555-666-2222', '654 Elm St, Suburb', '2019-08-27', '2023-05-30', 'Political Science', 'International Relations', 3.80),
+    (1049, 'Daniel', 'Torres', '2001-01-31', 'daniel.torres@outlook.com', '123-777-5555', '789 Cedar St, Village', '2020-08-10', '2024-06-10', 'Marketing', 'Business Administration', 3.84),
+    (1050, 'Nora', 'Perez', '1997-12-05', 'nora.perez@yahoo.com', '222-444-9999', '456 Oak St, City', '2018-08-15', '2022-05-20', 'History', 'Psychology', 3.73),
+	(1051, 'Jacob', 'Brown', '2002-04-08', 'jacob.brown@hotmail.com', '555-333-6666', '231 Pine St, Suburb', '2020-08-01', '2024-06-10', 'Business Administration', 'Marketing', 3.68),
+    (1052, 'Abigail', 'Lopez', '1998-09-22', 'abigail.lopez@outlook.com', '123-444-8888', '654 Cedar St, City', '2018-08-27', '2022-05-24', 'Sociology', 'Psychology', 3.85),
+    (1053, 'Michael', 'Rodriguez', '2001-02-03', 'michael.rodriguez@hotmail.com', '666-222-7777', '789 Birch St, Suburb', '2017-08-22', '2021-05-15', 'Computer Engineering', 'Electrical Engineering', 3.79),
+    (1054, 'Emily', 'Garcia', '1999-10-15', 'emily.garcia@gmail.com', '222-555-1111', '456 Elm St, Village', '2019-09-03', '2023-05-30', 'English Literature', 'History', 3.92),
+    (1055, 'Daniel', 'Scott', '2000-08-12', 'daniel.scott@hotmail.com', '123-666-7777', '987 Oak St, City', '2018-08-15', '2022-05-20', 'Chemical Engineering', 'Biology', 3.71),
+    (1056, 'Harper', 'King', '1997-06-28', 'harper.king@yahoo.com', '555-222-9999', '231 Pine St, Suburb', '2017-08-15', '2021-05-18', 'Nursing', 'Pre-Med', 3.98),
+    (1057, 'Matthew', 'Smith', '2001-03-19', 'matthew.smith@rediffmail.com', '987-444-7777', '456 Cedar St, Village', '2018-09-01', '2022-06-12', 'Economics', 'Mathematics', 3.75),
+    (1058, 'Aria', 'Morales', '1998-01-09', 'aria.morales@hotmail.com', '222-333-5555', '789 Oak St, City', '2019-08-27', '2023-05-30', 'Political Science', 'International Relations', 3.83),
+    (1059, 'Alexander', 'Martinez', '1999-07-23', 'alexander.martinez@outlook.com', '666-777-1111', '123 Cedar St, Suburb', '2020-08-10', '2024-06-10', 'Physics', 'Astronomy', 3.84),
+    (1060, 'Ava', 'Hill', '2000-11-11', 'ava.hill@yahoo.com', '123-555-7777', '231 Birch St, Village', '2017-08-15', '2021-05-18', 'Mechanical Engineering', 'Mathematics', 3.81),
+    (1061, 'Sebastian', 'Diaz', '2001-12-04', 'sebastian.diaz@hotmail.com', '555-444-2222', '456 Elm St, Suburb', '2018-08-15', '2022-05-20', 'Biology', 'Chemistry', 3.78),
+    (1062, 'Luna', 'Gonzalez', '1997-08-26', 'luna.gonzalez@outlook.com', '987-666-9999', '789 Oak St, City', '2019-08-27', '2023-05-30', 'Psychology', 'Sociology', 3.79),
+    (1063, 'Nicholas', 'Perez', '1999-04-03', 'nicholas.perez@gmail.com', '222-111-8888', '123 Cedar St, Village', '2020-08-10', '2024-06-12', 'History', 'Political Science', 3.87),
+    (1064, 'Ella', 'Turner', '2002-10-31', 'ella.turner@rediffmail.com', '666-777-5555', '456 Pine St, Suburb', '2017-08-22', '2021-05-15', 'Art History', 'English Literature', 3.88),
+    (1065, 'Oliver', 'Clark', '1998-03-29', 'oliver.clark@outlook.com', '123-666-3333', '987 Oak St, Village', '2019-09-03', '2023-05-30', 'Electrical Engineering', 'Computer Engineering', 3.92),
+    (1066, 'Aurora', 'Garcia', '2000-05-14', 'aurora.garcia@yahoo.com', '555-444-1111', '789 Elm St, City', '2018-08-15', '2022-05-20', 'Marketing', 'Business Administration', 3.75),
+    (1067, 'Lucas', 'Harris', '1997-01-07', 'lucas.harris@hotmail.com', '222-666-9999', '231 Oak St, Suburb', '2017-08-22', '2021-05-15', 'Mathematics', 'Physics', 3.86),
+    (1068, 'Avery', 'Carter', '1999-09-12', 'avery.carter@outlook.com', '666-111-5555', '456 Pine St, Village', '2018-08-27', '2022-05-24', 'Pre-Med', 'Nursing', 3.79),
+    (1069, 'Mason', 'Lee', '2002-06-10', 'mason.lee@outlook.com', '987-222-3333', '789 Cedar St, Suburb', '2020-08-01', '2024-06-10', 'Economics', 'Political Science', 3.81),
+    (1070, 'Mila', 'Collins', '1998-04-02', 'mila.collins@gmail.com', '555-666-4444', '231 Elm St, City', '2019-09-03', '2023-05-30', 'Astronomy', 'Physics', 3.87),
+	(1071, 'Liam', 'Thompson', '2001-07-05', 'liam.thompson@yahoo.com', '666-555-2222', '123 Oak St, Suburb', '2018-08-15', '2022-05-20', 'Chemistry', 'Biology', 3.75),
+    (1072, 'Scarlett', 'Wright', '1999-05-19', 'scarlett.wright@gmail.com', '555-444-6666', '456 Birch St, Village', '2019-08-27', '2023-05-30', 'Computer Science', 'Information Technology', 3.86),
+    (1073, 'Henry', 'Wilson', '2000-09-11', 'henry.wilson@hotmaile.com', '987-666-2222', '789 Pine St, City', '2017-08-15', '2021-05-18', 'Civil Engineering', 'Environmental Engineering', 3.82),
+    (1074, 'Lily', 'Anderson', '1998-02-28', 'lily.anderson@gmail.com', '123-444-7777', '231 Cedar St, Suburb', '2018-08-15', '2022-05-20', 'Psychology', 'Counseling', 3.88),
+    (1075, 'Logan', 'Hernandez', '2002-01-23', 'logan.hernandez@rediffmail.com', '666-222-5555', '456 Oak St, Village', '2020-08-10', '2024-06-12', 'English Literature', 'Creative Writing', 3.75),
+    (1076, 'Zoe', 'Martin', '1997-11-14', 'zoe.martin@hotmail.com', '555-333-4444', '789 Elm St, Suburb', '2017-08-22', '2021-05-15', 'Mechanical Engineering', 'Electrical Engineering', 3.91),
+    (1077, 'William', 'White', '2001-06-02', 'william.white@yahoo.com', '987-444-1111', '231 Birch St, City', '2019-09-03', '2023-05-30', 'History', 'Political Science', 3.79),
+    (1078, 'Hazel', 'Hall', '1999-12-17', 'hazel.hall@outlook.com', '222-555-3333', '456 Pine St, Village', '2020-08-01', '2024-06-10', 'Sociology', 'Anthropology', 3.84),
+    (1079, 'James', 'Patterson', '2000-04-03', 'james.patterson@gmail.com', '123-666-9999', '789 Oak St, Suburb', '2018-08-27', '2022-05-24', 'Mathematics', 'Physics', 3.87),
+    (1080, 'Evelyn', 'Bell', '1998-08-29', 'evelyn.bell@hotmail.com', '555-777-1111', '231 Cedar St, City', '2017-08-15', '2021-05-18', 'Economics', 'Business Administration', 3.78),
+    (1081, 'Noah', 'Gardner', '1997-03-21', 'noah.gardner@outlook.com', '987-444-6666', '456 Elm St, Village', '2019-08-27', '2023-05-30', 'Pre-Med', 'Biology', 3.85),
+    (1082, 'Luna', 'Reyes', '2001-10-07', 'luna.reyes@gmail.com', '666-222-7777', '789 Birch St, City', '2018-09-01', '2022-06-12', 'Art History', 'Fine Arts', 3.91),
+    (1083, 'Benjamin', 'King', '1999-09-01', 'benjamin.king@yahoo.com', '555-333-1111', '123 Elm St, Suburb', '2020-08-10', '2024-06-10', 'Environmental Science', 'Geology', 3.76),
+    (1084, 'Aria', 'Torres', '1997-12-12', 'aria.torres@gmail.com', '123-777-6666', '456 Cedar St, Village', '2017-08-15', '2021-05-18', 'Chemical Engineering', 'Materials Science', 3.83),
+    (1085, 'Jack', 'Stewart', '2002-02-15', 'jack.stewart@rediffmail.com', '987-666-4444', '231 Pine St, Suburb', '2019-08-27', '2023-05-30', 'Political Science', 'History', 3.89),
+    (1086, 'Sophia', 'Morales', '1998-07-28', 'sophia.morales@hotmail.com', '555-555-4444', '789 Oak St, Village', '2018-08-27', '2022-05-24', 'Computer Science', 'Information Technology', 3.76),
+    (1087, 'Jacob', 'Rodriguez', '2000-01-09', 'jacob.rodriguez@gmail.com', '222-333-6666', '456 Elm St, Suburb', '2018-08-22', '2022-05-15', 'Mechanical Engineering', 'Electrical Engineering', 3.84),
+    (1088, 'Emma', 'Collins', '1997-06-19', 'emma.collins@rediffmail.com', '666-222-4444', '231 Birch St, Village', '2017-08-15', '2021-05-18', 'Physics', 'Mathematics', 3.88),
+    (1089, 'Michael', 'Gonzalez', '1999-03-04', 'michael.gonzalez@yahoo.com', '987-777-5555', '789 Cedar St, City', '2019-09-03', '2023-05-30', 'Psychology', 'Counseling', 3.75),
+    (1090, 'Ava', 'Ward', '2001-05-27', 'ava.ward@outlook.com', '555-444-3333', '123 Pine St, Suburb', '2018-08-15', '2022-05-20', 'Business Administration', 'Economics', 3.83),
+    (1091, 'Ethan', 'Foster', '1998-11-08', 'ethan.foster@gmail.com', '222-666-7777', '456 Cedar St, Village', '2017-08-22', '2021-05-15', 'Nursing', 'Pre-Med', 3.87),
+    (1092, 'Madison', 'Barnes', '2002-09-30', 'madison.barnes@hotmail.com', '666-111-4444', '789 Elm St, Suburb', '2018-08-27', '2022-05-24', 'Political Science', 'History', 3.79),
+    (1093, 'Oliver', 'Reed', '1999-03-14', 'oliver.reed@rediffmail.com', '555-222-5555', '231 Oak St, Village', '2020-08-01', '2024-06-12', 'Electrical Engineering', 'Computer Engineering', 3.85),
+    (1094, 'Charlotte', 'Howard', '1997-07-16', 'charlotte.howard@rediffmail.com', '987-666-3333', '456 Elm St, City', '2018-08-15', '2022-05-20', 'Marketing', 'Business Administration', 3.76),
+    (1095, 'Sebastian', 'Cook', '2001-02-02', 'sebastian.cook@gmail.com', '123-444-7777', '789 Pine St, Suburb', '2019-09-03', '2023-05-30', 'Art History', 'English Literature', 3.92),
+    (1096, 'Aurora', 'Gray', '1998-05-20', 'aurora.gray@outlook.com', '555-666-4444', '231 Elm St, Village', '2017-08-15', '2021-05-18', 'Mathematics', 'Physics', 3.86),
+    (1097, 'Lucas', 'Myers', '2000-11-12', 'lucas.myers@hotmail.com', '987-444-1111', '456 Pine St, City', '2018-08-22', '2022-05-15', 'Civil Engineering', 'Environmental Engineering', 3.81),
+    (1098, 'Avery', 'West', '1999-02-15', 'avery.west@hotmail.com', '666-222-3333', '789 Oak St, Village', '2019-08-27', '2023-05-30', 'Psychology', 'Counseling', 3.84),
+    (1099, 'Mason', 'Turner', '2002-08-03', 'mason.turner@hotmail.com', '555-555-3333', '123 Birch St, Suburb', '2020-08-10', '2024-06-10', 'Mechanical Engineering', 'Electrical Engineering', 3.79),
+    (1100, 'Ella', 'Perez', '1998-03-30', 'ella.perez@yahoo.com', '222-444-6666', '456 Cedar St, Village', '2017-08-15', '2021-05-18', 'History', 'Political Science', 3.87),
+    (1101, 'Carter', 'Fisher', '2000-10-21', 'carter.fisher@gmail.com', '666-444-7777', '231 Oak St, Suburb', '2018-08-15', '2022-05-20', 'English Literature', 'Creative Writing', 3.75),
+    (1102, 'Grace', 'Morgan', '1999-04-15', 'grace.morgan@outlook.com', '555-222-5555', '789 Pine St, Village', '2019-08-27', '2023-05-30', 'Computer Science', 'Information Technology', 3.85),
+    (1103, 'Gabriel', 'Baker', '2002-07-08', 'gabriel.baker@hotmail.com', '987-666-3333', '123 Cedar St, City', '2020-08-01', '2024-06-12', 'Nursing', 'Pre-Med', 3.92),
+    (1104, 'Sofia', 'Hayes', '1997-12-31', 'sofia.hayes@gmail.com', '666-111-4444', '456 Elm St, Suburb', '2017-08-15', '2021-05-18', 'Mechanical Engineering', 'Electrical Engineering', 3.81),
+    (1105, 'Olivia', 'Simmons', '2000-10-05', 'olivia.simmons@outlook.com', '555-333-1111', '231 Birch St, Village', '2018-08-22', '2022-05-15', 'Sociology', 'Anthropology', 3.87),
+    (1106, 'John', 'Cruz', '1998-01-18', 'john.cruz@rediffmail.com', '987-777-5555', '789 Oak St, Suburb', '2019-09-03', '2023-05-30', 'Art History', 'Fine Arts', 3.79),
+    (1107, 'William', 'Perry', '1999-03-11', 'william.perry@ehotmail.com', '555-444-3333', '123 Pine St, City', '2020-08-10', '2024-06-10', 'Environmental Science', 'Geology', 3.84),
+    (1108, 'Harper', 'Powell', '2002-06-23', 'harper.powell@yahoo.com', '222-666-7777', '456 Cedar St, Village', '2018-08-27', '2022-05-24', 'Political Science', 'History', 3.86),
+    (1109, 'Joseph', 'Long', '1997-11-25', 'joseph.long@gmail.com', '666-222-4444', '231 Oak St, City', '2017-08-15', '2021-05-18', 'Computer Engineering', 'Electrical Engineering', 3.75),
+    (1110, 'Camila', 'Flores', '1998-12-13', 'camila.flores@yahoo.com', '123-777-6666', '789 Elm St, Suburb', '2019-08-27', '2023-05-30', 'Chemical Engineering', 'Materials Science', 3.91);
+    ;
+```
+
+### Yayyyy: Table Created with valid data:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%2010.png)
+
+---
+
+## CloudWatch and Metric Assesment:
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%2011.png)
+
+### All the metrics that need to be measured
+
+![Untitled](QueryBoostX%20PostgreSQL%20Query%20Optimization%20Solution%2058f30774c30e4cbc8e6bebd89978d6f8/Untitled%2012.png)
+
+---
+
+# Further Agenda for Iteration#2:
+
+1. Design a better CloudWatch explorer system that can give alarms
+2. Make a GUI CRUD system along with a performance monitoring centralised panel
+
+---
